@@ -1,0 +1,14 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+00_文件来源.txt
+*.png
+*.jpg
+*.jpeg
+*.webp
+!assets/examples/01-entryway.png
+!assets/examples/02-flower-arranging.png
+!assets/examples/03-washbasin.png

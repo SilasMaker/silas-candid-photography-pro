@@ -11,7 +11,7 @@ import sys
 from typing import Any
 
 
-VERSION = "3"
+VERSION = "4"
 MAX_COUNT = 100
 MAX_WEIGHT = 100
 MAX_ATTEMPTS = 100
@@ -317,7 +317,7 @@ def _repair_compatibility_pass(
         )
 
     scene = plan["scene"]
-    if plan["action"] == "翻阅书页" and scene not in {"街角咖啡店", "旧书店窗边"}:
+    if plan["action"] == "翻阅书页" and scene in SCENE_ACTION_FALLBACK:
         _repair_pair(
             plan,
             "action",
@@ -456,7 +456,7 @@ def _compatibility_conflicts(
             )
         )
 
-    if plan["action"] == "翻阅书页" and scene not in {"街角咖啡店", "旧书店窗边"}:
+    if plan["action"] == "翻阅书页" and scene in SCENE_ACTION_FALLBACK:
         conflicts.append(
             (
                 "page-turning needs a scene that plausibly contains reading material",
@@ -624,7 +624,17 @@ def _normalized_request(request: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(references, (dict, list)):
         raise ValueError("references must be an object or array")
 
-    return {
+    shots = request.get("shots")
+    if "shots" in request:
+        if not isinstance(shots, list) or len(shots) != count:
+            raise ValueError("shots must be an array with exactly count entries")
+        for index, shot in enumerate(shots, start=1):
+            _require_object(shot, f"shot {index}")
+            _validate_text_mapping(shot, f"shot {index}", set(POOLS))
+            if not {"action", "expression"} <= set(shot):
+                raise ValueError(f"shot {index} requires action and expression")
+
+    normalized = {
         "count": count,
         "mode": mode.lower(),
         "subject": subject,
@@ -637,6 +647,9 @@ def _normalized_request(request: dict[str, Any]) -> dict[str, Any]:
         "reference_controls": dict(reference_controls),
         "identity_policy": identity_policy,
     }
+    if shots is not None:
+        normalized["shots"] = [dict(shot) for shot in shots]
+    return normalized
 
 
 def compose(request: dict) -> dict:
@@ -651,6 +664,7 @@ def compose(request: dict) -> dict:
     identity_policy = normalized["identity_policy"]
     randomizer = random.Random(normalized["seed"])
     protected = set(locks) | set(reference_controls)
+    shots = normalized.get("shots")
 
     warnings: list[str] = []
     for key in sorted(set(locks) & set(reference_controls)):
@@ -663,15 +677,27 @@ def compose(request: dict) -> dict:
     plans: list[dict[str, Any]] = []
     repairs: list[dict[str, Any]] = []
     for plan_index in range(count):
+        shot = shots[plan_index] if shots is not None else {}
+        for key in sorted(set(shot) & protected):
+            effective = locks.get(key, reference_controls.get(key))
+            if shot[key] != effective:
+                warnings.append(
+                    f"Shot {plan_index + 1} control conflict for {key}: "
+                    f"shared lock/reference {effective!r} overrides shot {shot[key]!r}."
+                )
+        # A shot is one authored performance, not independently sampled limbs.
+        # Shared user/reference controls outrank it; compatibility cannot erase it.
+        plan_controls = {**shot, **reference_controls}
+        plan_protected = protected | set(shot)
         candidate: dict[str, Any] | None = None
         candidate_repairs: list[dict[str, Any]] = []
         candidate_warnings: list[str] = []
         for _ in range(MAX_ATTEMPTS):
-            candidate = _make_plan(randomizer, locks, reference_controls, biases)
+            candidate = _make_plan(randomizer, locks, plan_controls, biases)
             candidate_repairs, candidate_warnings = _repair_compatibility(
-                candidate, protected, identity_policy, plan_index + 1
+                candidate, plan_protected, identity_policy, plan_index + 1
             )
-            if _is_diverse(candidate, plans):
+            if shots is not None or _is_diverse(candidate, plans):
                 break
         else:
             warnings.append(
@@ -680,6 +706,14 @@ def compose(request: dict) -> dict:
             )
 
         assert candidate is not None
+        if shots is not None and any(
+            all(candidate[key] == prior[key] for key in ("action", "expression"))
+            for prior in plans
+        ):
+            warnings.append(
+                f"Plan {plan_index + 1} repeats an authored performance "
+                "(action and expression); changing the background is not performance diversity."
+            )
         candidate["subject"] = normalized["subject"]
         candidate["identity_policy"] = identity_policy
         plans.append(candidate)

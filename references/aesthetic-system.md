@@ -1,6 +1,6 @@
 # Aesthetic system
 
-Use this reference to phrase a returned final plan in visible, natural photographic language. The composer pool is only a set of defaults: user locks, reference controls, and custom natural-language bias values may be outside it. Never replace a final field while rendering. User locks always win.
+Use this reference to phrase a returned final plan in visible, natural photographic language. The composer pool is only a set of defaults: user locks, reference controls, authored `shots`, and custom natural-language bias values may be outside it. Never replace a final field while rendering. User locks always win. Before calling the composer, use [natural performance](natural-performance.md) to turn action/expression labels into coordinated, scene-specific moments.
 
 ## Twelve dimensions
 
@@ -8,10 +8,10 @@ Compatibility tags describe useful affinities rather than extra requirements: `w
 
 | Dimension / composer key | Options and useful directions | Compatibility notes |
 |---|---|---|
-| 表情 `expression` | 自然微笑；专注侧望；放松平静；回眸一瞬；说话未完、短暂走神、被环境吸引 | 回眸一瞬 pairs with `moving`; subtle expression protects identity better than extreme grimaces. |
+| 表情 `expression` | 明确看向谁或什么、相对眼睛的方向，再写眉眼、面颊、嘴部变化；专注、疑惑、吃力、惊喜、笑出声、松一口气 | Match the visible emotion to the action. Natural laughter and effort can preserve identity; protect anatomy, not a frozen neutral face. |
 | 服装 `wardrobe` | 亚麻衬衫与半身裙；针织上衣与牛仔裤；轻薄连衣裙；宽松风衣；可见的轮廓、材质、覆盖度、颜色与松紧关系 | Describe visible construction, not a trend label alone. Long hems need plausible movement and ground clearance. |
 | 场景 `scene` | 盛夏荷塘；街角咖啡店；旧书店窗边；傍晚海堤；花店工作台、雨后店门、公交车厢、便利店门口等 lived-in spaces | Tag as `outdoor`/`interior` and `day`/`dusk`; preserve functional objects and ordinary clutter. |
-| 进行中动作 `action` | 整理发梢；缓步前行；翻阅书页；望向远处；收伞、扎花、推门、递物、整理衣角 | Prefer an unfinished verb plus a small consequence: fabric shift, lifted heel, water drops, or displaced object. |
+| 进行中动作 `action` | 动作原因、头肩与躯干关系、双手分工、重心或支撑、一个物理结果；思考停笔、拧开物件、回应、伸展、迈步等 | Compose a single readable beat. Attention and head orientation must agree; props, clothing and supports respond to the same action. |
 | 景别 `shot_distance` | 全身；中景；近景；特写；环境人像、半身 | Full-body actions need adequate camera distance; identity-high work favors medium or close views unless locked otherwise. |
 | 焦段 `lens` | 28mm广角；50mm标准；85mm中长焦；200mm长焦；35mm纪实广角 | `wide` supports environmental proximity; `tele` needs distance and compression. A lens is not permission to contradict the requested framing. |
 | 机位 `camera_angle` | 平视；低机位仰拍；高机位俯拍；侧后方跟拍；贴近桌面、门后偷看、隔窗、肩后、地面附近 | State the photographer's physical position and viewing direction. Extreme proximity or distortion consumes identity budget. |

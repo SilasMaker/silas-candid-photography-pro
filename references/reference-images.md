@@ -6,6 +6,7 @@ Assign every supplied image one or more explicit roles before planning. Refer to
 |---|---|---|
 | `identity` | face shape and features, hair and hairline, body proportions, stable accessories or marks | pose, environment, lighting, or wardrobe unless separately assigned |
 | `wardrobe` | garment silhouette, construction, material, coverage, color, and styling relationship | person identity or body shape |
+| `pose` | explicitly requested head/body orientation, support, gesture, gaze and facial performance | identity, clothes, lighting, or environment |
 | `companion` | identity and stable appearance of a dog, other companion, prop, or product | main-subject identity or scene composition |
 | `composition` | subject placement, framing, shot distance, viewing direction, and spatial relationships | the depicted person's identity or garment identity |
 | `environment` | architecture, layout, surface materials, fixtures, and scene objects | subject identity or lighting unless separately assigned |
@@ -14,7 +15,9 @@ Assign every supplied image one or more explicit roles before planning. Refer to
 
 ## Normalize controls before composition
 
-Map concrete reference evidence to the closest final-plan field: `identity` → `identity_anchors`; `wardrobe` → `wardrobe`; `composition` → `composition`, `shot_distance`, or `camera_angle`; `environment` → `scene`; `lighting` → `lighting`; and `style` → `color_scheme` or `photography_state`. `companion` details belong in the relevant subject/action wording only when the plan schema represents them explicitly; do not smuggle them into another field.
+Map concrete reference evidence to the closest final-plan field: `identity` → `identity_anchors`; `wardrobe` → `wardrobe`; `pose` → `action` and `expression`; `composition` → `composition`, `shot_distance`, or `camera_angle`; `environment` → `scene`; `lighting` → `lighting`; and `style` → `color_scheme` or `photography_state`. `companion` details belong in the relevant subject/action wording only when the plan schema represents them explicitly; do not smuggle them into another field.
+
+Do not extract lowered eyes, a chin angle or a quiet smile into `identity_anchors`. Identity/wardrobe/style sources do not freeze performance. Only carry pose/expression from an explicitly assigned `pose` source or user lock; otherwise design new performances in `shots`. A wardrobe lock protects garment construction and coverage, not identical folds while the body moves.
 
 Pass these values as the top-level `reference_controls` object together with `references`, which retains source labels and role assignments. The composer copies every non-conflicting control into every returned final plan. A user lock on the same field wins; the original control remains visible in `normalized_request.reference_controls`, and the conflict appears in `warnings`. Bounded compatibility convergence and the final invariant check treat both locks and reference controls as protected. Resolve any warning before rendering instead of silently rewriting the reference assignment.
 
@@ -32,6 +35,8 @@ Examples of required separation:
 ## Identity policy
 
 For `high` identity consistency, explicitly preserve face shape, feature proportions, hairline, signature accessories, and body proportions from the `identity` source. Keep these anchors visible and stable across the batch. Do not use heavy facial obstruction, extreme facial perspective distortion, strong motion blur over the face, radical profile rotations unsupported by the source, or style treatment that changes recognizable anatomy. Composition, lighting, and candid imperfections adapt around those anchors.
+
+High identity consistency still allows comfortable head turns, eye movement, raised brows, exertion and laughter appropriate to the chosen moment. Preserve stable feature proportions through these changes rather than suppressing expression or copying the reference's face angle into every shot.
 
 For `balanced`, preserve stable identity while allowing ordinary pose, expression, and viewpoint variation. No policy permits a non-identity reference to overwrite identity.
 

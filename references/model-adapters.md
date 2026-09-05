@@ -4,6 +4,8 @@ The composer response is the sole source of truth. For each output, an adapter r
 
 Every adapted prompt must visibly phrase the returned subject, identity anchors when present, expression, wardrobe, scene, action, shot distance, lens, camera position, composition, foreground, lighting, color scheme, and photography state. Reference-role language may identify where a returned value came from, but it cannot overlay a different value. If the composer returns an unresolved warning, resolve the warning gate before adapting rather than hiding the conflict in prose.
 
+Within `action` and `expression`, retain the causal beat, comfortable head/body relationship, hands/support, specific gaze target and visible facial response. Never compress these back to “自然微笑、自然抓拍” or add habitual downcast eyes to a returned level/upward gaze. Identity-preservation wording protects anatomy, not a frozen pose. Remove repeated mood adjectives before cutting these relationships.
+
 Do not claim cross-model pixel equivalence. Do not invent support for seeds, reference weights, negative-prompt fields, edit masks, quality switches, or any other parameter. Pass attachments and settings only through controls actually exposed by the available tool.
 
 ## Prompt budgets

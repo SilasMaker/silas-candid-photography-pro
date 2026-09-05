@@ -8,7 +8,7 @@ Use this only after an explicitly authorized image-generation attempt. Audit wha
 |---|---:|---|
 | User locks | 25 | Every locked subject, garment, scene, camera, composition, and other condition is visibly satisfied. |
 | Subject / identity consistency | 20 | Face shape, feature proportions, hairline, signature accessories, and body proportions follow the identity policy and references. |
-| Natural action and candidness | 10 | The action appears mid-flow, physically coherent, and unposed. |
+| Natural action and candidness | 10 | Motivated head/shoulder/body coordination (3), eyes attending to the planned target with coherent facial response (3), plausible hand/support/weight relationships (2), and a mid-flow physical consequence (2). Judge only evidence relevant to the framing. |
 | Camera, composition, and spatial depth | 15 | Shot distance, lens character, photographer position, unusual composition, and depth relationships read clearly. |
 | Foreground obstruction | 10 | The named intrusion enters plausibly, creates depth, and preserves protected identity anchors. |
 | Lighting and color | 10 | Sources, direction, contrast, exposure, and 3–4 dominant colors match the plan. |
@@ -21,6 +21,8 @@ The complete pass rule is exactly:
 3. identity is at least `16/20`.
 
 There are no mandatory floors for action, camera/composition/depth, foreground, lighting/color, or texture. For example, foreground `6/10` does not prevent a pass when all locks hold, identity is at least 16, and the total is at least 85. Record points and concrete visible evidence for every dimension, but do not turn descriptive expectations into additional pass gates.
+
+For batches, also inspect a contact-sheet view or compare all outputs: did varied planned performances collapse into the same chin tilt, downward gaze or small smile? Record the observed repetitions, not merely the prompt's intended variety. Explicit user requirements for varied performances belong to User locks; missed gaze/action values that were explicitly locked are also lock misses. Otherwise score the visible failure in action/candidness and follow the existing pass and bounded-repair rules. Do not manufacture a new numerical pass gate or call a stiff result natural merely because its background changed. Preserve intentionally quiet or repeated poses requested by the user.
 
 ## Select repair targets
 

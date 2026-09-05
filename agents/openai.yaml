@@ -1,0 +1,4 @@
+interface:
+  display_name: "Silas Candid Photography Pro"
+  short_description: "可复现、可审核的真实抓拍摄影提示词与生图工作流"
+  default_prompt: "Use $silas-candid-photography-pro to generate 10 reproducible candid portrait prompts."

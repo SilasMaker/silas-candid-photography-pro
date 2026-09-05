@@ -9,7 +9,7 @@ Produce reproducible, plausible candid photography while preserving explicit cho
 
 ## Resolve the request
 
-Parse `count`, `mode`, `subject`, `aspect_ratio`, `model`, `seed`, `locks`, `biases`, `references`, `reference_controls`, and `identity_policy`. “Must,” “only,” and exact values are locks; preferences are biases. `reference_controls` is a concrete mapping from a reference assignment to a plan field (for example, `composition`, `lighting`, or `identity_anchors`), not a second plan to overlay later.
+Parse `count`, `mode`, `subject`, `aspect_ratio`, `model`, `seed`, `locks`, `biases`, `references`, `reference_controls`, `identity_policy`, and ordered `shots`. “Must,” “only,” and exact values are locks; preferences are biases. `reference_controls` is a concrete mapping from a reference assignment to a plan field (for example, `composition`, `lighting`, or `identity_anchors`), not a second plan to overlay later.
 
 Apply this priority order:
 
@@ -23,9 +23,17 @@ Apply this priority order:
 
 Locks survive every stage. On a hard conflict, name the smallest conflicting set and ask one decisive question. If locks limit diversity, retain them and use the warning gate. Reference controls are protected below locks: pass both values to the composer so it returns the lock, records the reference conflict, and never hides the disagreement.
 
+## Plan a natural performance
+
+Before composition, read [natural performance](references/natural-performance.md). Design each shot as one motivated instant: a trigger, coordinated head/shoulders/body and hands, a specific gaze target, visible expression, and a physical consequence. Put body mechanics and head orientation in `action`, and gaze target plus facial behavior in `expression`. Preserve identity and wardrobe without freezing the reference's pose or face.
+
+Submit these paired descriptions in one `shots` array of exactly `count` entries; include the other photographic fields needed to make each moment coherent. Audit action families, head/gaze combinations and emotional energy across the complete batch, not merely room or lens changes. Respect explicitly quiet, downcast or fixed-pose requests. The legacy random action/expression labels are brainstorming seeds, not finished prompts.
+
 ## Choose the mode
 
 Before rendering any plan, run `python scripts/compose_plan.py --request-json '<JSON object>'` here. It validates count/weights, applies locks and concrete reference controls, repeatedly repairs only unprotected incompatible fields until stable within a fixed bound, checks final compatibility invariants, and returns `normalized_request`, final `plans`, `repairs`, `seed`, `version`, and `warnings`. Any protected, non-convergent, or otherwise remaining final conflict is an explicit warning. That returned record is the sole source of truth. Do not merge sampled values back into an earlier draft and do not apply a reference, aesthetic, or renderer overlay afterward.
+
+Shared locks and reference controls outrank authored shot fields. The composer preserves each authored action/expression pair and reports exact repeated performances; the assistant must also audit semantic repetition, gaze geometry and physical plausibility. No script result guarantees natural-looking generated images.
 
 - **Prompt** (default): render numbered natural-language prompts without an image tool.
 - **Generate**: requires an explicit image-creation request. Assign reference roles, use an available image tool, audit each result, and allow at most two repairs. Generation does not authorize sharing.
@@ -34,7 +42,7 @@ Without an image tool, explicitly downgrade to Prompt mode, state that no image 
 
 ### Warning gate
 
-Stop before prompt rendering on an unresolved compatibility or lock/reference-control warning and ask one decisive question. On a diversity warning without explicit acceptance of best-effort duplicates, ask whether to accept duplicates with protected controls retained. Never append warnings to a nominal successful batch. After acceptance, render without claiming the warned condition was resolved; “only prompts” still outputs only prompts after the gate is resolved.
+Stop before rendering on an unresolved warning. If only an assistant-authored shot conflicts or repeats unintentionally, revise that draft without changing user locks/reference roles and rerun. For a conflict between actual user locks/reference controls, ask one decisive question. On a diversity warning constrained by user choices, ask whether to accept duplicates unless the user already explicitly requested repeated poses or accepted best-effort duplicates. Never append unresolved warnings to a nominal successful batch or claim accepted repetition was made diverse; “only prompts” still outputs only prompts after the gate is resolved.
 
 ## Build the result
 
@@ -44,7 +52,7 @@ Stop before prompt rendering on an unresolved compatibility or lock/reference-co
 4. In Generate mode, read [the quality rubric](references/quality-rubric.md) before generation.
 5. Read [the example](references/examples.md) only for three-reference or targeted-repair ambiguity.
 
-Require visible final-prompt slots for subject, every lock, any identity anchors, expression, wardrobe, scene, in-progress action, shot distance, lens, camera position/angle, composition, foreground, lighting, 3–4 dominant colors, photography state, and reference roles. Each slot must phrase its value from the returned final plan; no adapter may silently substitute a “more suitable” value.
+Require visible final-prompt slots for subject, every lock, any identity anchors, expression with gaze target, wardrobe, scene, in-progress action with head/body mechanics, shot distance, lens, camera position/angle, composition, foreground, lighting, 3–4 dominant colors, photography state, and reference roles. Each slot must phrase its value from the returned final plan; no adapter may silently substitute a “more suitable” value. If returned details fail the performance audit, correct the unrequested draft and rerun before rendering rather than inventing missing choreography in the final text.
 
 ## Output contract
 
